@@ -1,0 +1,10 @@
+DROP DATABASE IF EXISTS cows;
+CREATE DATABASE cows;
+USE cows;
+
+CREATE TABLE cowList(
+   id INT NOT NULL AUTO_INCREMENT,
+   cows VARCHAR(100) NOT NULL,
+   description VARCHAR(256),
+   PRIMARY KEY ( id )
+);

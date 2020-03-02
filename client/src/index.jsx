@@ -1,14 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Cow from './components/Cow.jsx'
+import ClickedCow from './components/ClickedCow.jsx'
+import CowList from './components/CowList.jsx'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       cows: [],
-      currentCow: null
+      currentCow: {cows: null}
     }
-
     this.onSubmit = this.onSubmit.bind(this);
     this.onClick = this.onClick.bind(this)
   }
@@ -22,12 +24,12 @@ class App extends React.Component {
     fetch('http://localhost:3000/api/cows')
     .then(res => res.json())
     .then((result) => {
-      this.setState({cows: result, currentCow: result[0]});
+      this.setState({cows: result});
     })
   }
 
   onClick(event){
-    this.setState({currentCow: event.target})
+    this.setState({currentCow: this.state.cows[event.target.id]})
   }
 
   onSubmit(event){
@@ -58,45 +60,24 @@ class App extends React.Component {
     return (
     <div> 
       <h1>Wi-Cow-pedia</h1>
+      <ClickedCow currentCow={this.state.currentCow}/>
     <form onSubmit={this.onSubmit}>
     <label>
       Name:
     <input type="text" name="name" />
     </label>
+    <br></br>
     <label>
       Description:
     <input type="text" name="description" />
     </label>
+    <br></br>
     <input type="submit" value="Submit"/>
     <CowList handleClick={this.onClick} cows={this.state.cows}/>
     </form>
     </div>
     )
   }
-}
-
-var CowList = (props) => {
-let cows = props.cows.map((cow,i) => {
-  return <Cow onClick={props.handleClick} key={i} cowName={cow.cows} cowDesc={cow.description}/>
-})
-
-return <div>{cows}</div>
-}
-
-class Cow extends React.Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      clicked: false
-    }
-
-  }
-
-  render() {
-  return (<div onClick={this.props.onClick}>
-    {this.props.cowName}
-  </div>) 
-  }  
 }
 
 var mountNode = document.getElementById("app");
